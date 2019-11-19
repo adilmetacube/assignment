@@ -1,0 +1,16 @@
+select name,Date_of_Birth__c,Sex__c from Student__c where last_name__c like 'S%'
+select name,(select First_Name__c,Date_of_Birth__c,Sex__c from Students__r) from Class__c where name like 'X%'
+select First_Name__c,Class__r.name from Student__c
+select name,(select First_Name__c from Students__r) from Class__c 
+SELECT Id, Name FROM Student__c WHERE Class__r.ClassTeacher__r.name LIKE 'S%'
+SELECT  Name FROM Student__c WHERE Date_of_Birth__c > 2000-01-01
+SELECT Id, Name, CreatedDate FROM Lead WHERE CreatedDate =THIS_MONTH AND SystemModstamp =THIS_MONTH
+select name,(select First_Name__c from Students__r where First_Name__c like 'S%') from Class__c 
+select name,Subject__c from Contact where Subject__c includes ('Hindi;English')
+select name,Subject__c from Student__c where Subject__c includes ('Hindi','M')
+select NumberOfStudents__c from Class__c 
+select Date_of_Birth__c from Student__c where Date_of_Birth__c =THIS_MONTH--(Need help)
+
+SOSL:
+FIND {Joe} IN Name Fields RETURNING Contact(name),Student__c(name)
+FIND {Joe} IN Name Fields RETURNING Contact(name),Student__c(name,Sex__c where Sex__c='Male')
