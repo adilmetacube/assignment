@@ -1,18 +1,17 @@
 public class ClassStudentsMap {
-  public static  Map<Id,Set<ID>> getClassStudentMap()
-   {
-       class__c[] cls = [select id,(select id from students__r) from class__C];
-       
-       Map<Id,Set<ID>> classStudentMap = new Map<Id,Set<ID>>();
-       
-       for(class__c clazz : cls)
-       {
-           Set<Id> studentIds = new Set<Id>();
-           for(Student__c s : clazz.Students__r) {
-               studentIds.add(s.Id);
-           }
-           classStudentMap.put(clazz.id,studentIds);
-       }
-       return classStudentMap;
-   }
+    public static  Map<Class__c,Set<ID>> getStudentsInClass()
+    {	
+        Map<Class__c,Set<ID>> classStudentMap = new Map<Class__c,Set<ID>>();
+        Class__c[] classObjectList = [SELECT Id,(SELECT Id FROM Students__r) FROM Class__c];
+        for(Class__c classobj : classObjectList)
+        {	
+            Set<Id> studentIds = new Set<Id>();
+            for(Student__c studentObj : classobj.Students__r) {
+                studentIds.add(studentObj.Id);
+            }
+            classStudentMap.put(classobj,studentIds);
+        }
+        return classStudentMap;
+    }
+    
 }

@@ -1,7 +1,6 @@
 public class StudentsInClass {
-    public static List<Student__c> studentListInClass(String className){
-        List<Student__c> studentList=[select name from Student__c where class__c=:className];
-         system.debug('student list : '+ studentList);
+    public static List<Student__c> getStudentsList(String className){
+        List<Student__c> studentList=[SELECT Name FROM Student__c where Class__c=:className];
         return studentList;
     } 
 }
