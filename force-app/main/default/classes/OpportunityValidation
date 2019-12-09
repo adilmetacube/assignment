@@ -1,1 +1,23 @@
+public class OpportunityValidation {
 
+   public static void updatedRelatedManager(Map<ID, Opportunity> triggerNewMap, List<Opportunity> triggerOld)
+   {
+       List<ID> updatedManagerFieldIDs = new List<ID>();
+       for(Opportunity oldOpp : triggerOld)
+       {
+           Opportunity newOpp = triggerNewMap.get(oldOpp.Id);
+           if(!oldOpp.BillToContact__c.equals(newOpp.BillToContact__c))
+           {
+               updatedManagerFieldIDs.add(newOpp.Id);
+           }
+       }
+       
+       List<opportunity> OpportunityList = [SELECT id, BillToContact__c, billtoContact__r.AccountId FROM  Opportunity WHERE id IN :updatedManagerFieldIDs];
+       
+       for(Opportunity opp : OpportunityList)
+       {
+           triggerNewMap.get(opp.id).Manager__c = opp.billtoContact__r.AccountId;
+       }
+       
+   }
+}
