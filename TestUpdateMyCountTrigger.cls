@@ -14,7 +14,6 @@ public class TestUpdateMyCountTrigger {
                 new Student__c(First_Name__c='Kim',Last_Name__c='Shain',Sex__c='Female',Class__c=objectClass2.Id)};
                     
                     
-                    Test.startTest();
         Database.SaveResult[] result = Database.insert(studentList,false);
         List<Class__c> classList=[select Max__c,MyCount__c from Class__c where id In : classLists];
         for(Class__c objClass:classList){
