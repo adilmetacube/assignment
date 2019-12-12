@@ -5,7 +5,6 @@ public class TestOpportunityTrigger {
                                        StageName='CLOSED_WON');
         insert oppObject;
         
-                Test.startTest();
         List<Opportunity> oppList=[select CloseDate from Opportunity where id =:oppObject.Id ];
         for(Opportunity oppListObject:oppList){
             System.assertEquals(System.Today(),oppListObject.CloseDate);
