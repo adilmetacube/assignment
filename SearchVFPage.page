@@ -1,0 +1,28 @@
+<apex:page Controller="SearchVFController">
+    <apex:form >
+        <apex:outputLabel value="Account Search" />     
+        <apex:commandButton value="Search records" action="{!search}"/>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="2">
+                <apex:inputText value="{!numberOfRecords}" label="Number of Accounts to show"/>
+                <apex:inputText value="{!billingCity}" label="Billing City"/>
+                <apex:inputText value="{!billingState}" label="Billing State"/>
+                <apex:inputText value="{!billingCountry}" label="Billing Country"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable value="{!acc}" var="a" id="myPanel">
+                <apex:column value="{!a.name}"/>
+                <apex:column value="{!a.Billingcity}"/>
+                <apex:column value="{!a.Billingstate}"/>
+                <apex:column value="{!a.billingCountry}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:outputPanel id="myButtons">
+                <apex:form >
+                    <apex:commandButton action="{!Beginning}" title="Beginning" value="<<" disabled="{!disablePrevious}" reRender="myPanel,myButtons"/>
+                    <apex:commandButton action="{!Previous}" title="Previous" value="<" disabled="{!disablePrevious}" reRender="myPanel,myButtons"/>        
+                    <apex:commandButton action="{!Next}" title="Next" value=">" disabled="{!disableNext}" reRender="myPanel,myButtons"/>
+                    <apex:commandButton action="{!End}" title="End" value=">>" disabled="{!disableNext}" reRender="myPanel,myButtons"/>        
+                </apex:form>
+     </apex:outputPanel>
+</apex:page>
