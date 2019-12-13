@@ -1,0 +1,52 @@
+<apex:page controller="ClassEditDeleteController">
+    <apex:form id="form" >
+        <apex:pageBlock title="Classes">
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:pageBlockTable value="{!classList}" var="row">
+                <apex:column value="{!row.Name}"/>
+                <apex:column value="{!row.ClassTeacher__c}"/>
+                <apex:column value="{!row.Max__c}"/>
+                <apex:column >
+                    <apex:commandButton action="{!editClassDetails}" value="Edit" reRender="editTable">
+                        <apex:param name="parentId"  assignTo="{!parentId}" value="{!row.Id}" />
+                    </apex:commandButton>
+                </apex:column>
+                <apex:column >     
+                    <apex:commandButton action="{! deleteClass}" value="Delete" title="Delete" reRender="form">
+                        <apex:param name="parentId" assignTo="{!parentId}" value="{!row.Id}" /> 
+                    </apex:commandButton>    
+                </apex:column>  
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        
+        <apex:outputPanel id="editTable">
+            <apex:pageBlock rendered="{!editStatus}"  >
+                <apex:pageBlockSection columns="2"  >  
+                    <apex:pageBlockTable value="{!editclassDetails}" var="row" >
+                        
+                        <apex:column headerValue="Class Name">
+                            <apex:inputField value="{!row.Name}"  required="true">
+                            </apex:inputField>
+                        </apex:column>
+                        <apex:column headerValue="Teacher">
+                            <apex:inputField value="{!row.ClassTeacher__c}"  required="true">
+                            </apex:inputField>
+                        </apex:column>
+                        <apex:column headerValue="Max Student">
+                            <apex:inputField value="{!row.Max__c}"  required="true">
+                            </apex:inputField>
+                        </apex:column>
+                        
+                        <apex:column >   
+                            <apex:commandButton action="{!saveClass}" value="Save" title="Save" reRender="form">
+                            </apex:commandButton>  
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+                
+            </apex:pageBlock>
+            
+        </apex:outputPanel>  
+            
+        </apex:form>
+    </apex:page>
