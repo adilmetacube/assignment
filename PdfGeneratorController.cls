@@ -3,6 +3,12 @@ public with sharing class PdfGeneratorController {
     public ID parentId {get;set;}
     public String pdfName {get;set;}
     
+    
+    public PdfGeneratorController(){
+        parentId=apexpages.currentpage().getparameters().get('id');
+        pdfName=String.valueOf(parentId)+'.pdf';
+    }
+    
     public PageReference savePdf() {
         deleteAttachment();
         PageReference pdf = Page.PdfGeneratorTemplate;
@@ -24,8 +30,10 @@ public with sharing class PdfGeneratorController {
     public void deleteAttachment()
     {
         List<Attachment> attachmentList=new List<Attachment>();
-        for(Student__c studentObj:[SELECT Id ,(SELECT Id FROM Attachments) FROM Student__c WHERE Id=:parentId]){
-            attachmentList=studentObj.Attachments;
+        for(Attachment attch:[SELECT Id,Name,ParentId FROM Attachment  WHERE ParentId=:parentId]){
+            if(attch.name==pdfName){
+                attachmentList.add(attch);
+            }
         }
         delete attachmentList;
     }
