@@ -1,0 +1,13 @@
+<apex:page standardController="Contact" showHeader="false" sidebar="false">
+  <div>
+    </div>
+      <style>
+        .myFormStyle {
+            background-color: blue;
+        	color: white
+        }
+    </style>
+    <apex:form styleClass="myFormStyle">
+        <div><center>{!Contact.RecordType.Name}</center></div>
+    </apex:form>
+</apex:page>
