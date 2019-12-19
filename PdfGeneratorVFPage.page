@@ -1,27 +1,3 @@
-<apex:page controller="PdfGeneratorController" >
-  <apex:form >
-    <apex:pageBlock >
-     
-      <apex:pageBlockButtons >
-        <apex:commandButton action="{!savePdf}" value="Generate Pdf"/>
-      </apex:pageBlockButtons>
-      <apex:pageMessages />
-       
-      <apex:pageBlockSection >
-       
-        <apex:pageBlockSectionItem >
-            <apex:outputLabel value="File Name" for="pdfName"/>
-          <apex:inputText value="{!pdfName}" id="pdfName"/>
-        </apex:pageBlockSectionItem>
-        
-        <apex:pageBlockSectionItem >
-            <apex:outputLabel value="Student ID" for="id"/>
-          <apex:inputText value="{!parentId}" id="id"/>
-        </apex:pageBlockSectionItem>
-       
-      </apex:pageBlockSection>
-
-    </apex:pageBlock>
-  </apex:form>
+<apex:page controller="PdfGeneratorController" action="{!savePdf}" >
 
 </apex:page>
