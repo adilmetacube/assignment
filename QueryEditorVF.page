@@ -1,0 +1,15 @@
+<apex:page controller="QueryEditorController">
+    <apex:form >
+        <apex:pageBlock title="Query Editor" >
+            <apex:pageBlockSection columns="1" >
+            <apex:inputTextarea id="newDesc" value="{!query}" cols="80" rows="2"/>
+            <apex:commandButton action="{!executeQuery}" value="Execute Query" rerender="component"/>
+                     </apex:pageBlockSection>
+            <apex:outputPanel id="component" >
+                <apex:outputPanel rendered="{!recordToshow}">
+                    <c:QueryEditorComponent InputString="{!query}" />
+                </apex:outputPanel> 
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
