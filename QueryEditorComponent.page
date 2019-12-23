@@ -1,0 +1,27 @@
+<apex:component controller="QueryEditorComponentController" >
+    <apex:attribute name="InputString" description="Received query string"  assignTo="{!query}" type="String" required="true"/>
+    <b> Received Input string is  : </b><apex:outputtext value="{!queryError}" />
+    
+    <apex:pageBlock title="{!IF(dataFromQuery != NULL && dataFromQuery.size > 0,'Records','There are no records to display')}">
+        <apex:pageBlockTable value="{!dataFromQuery}"  var="sObjRec" id="sobjectData">
+            <apex:repeat value="{!FieldList}" var="fl">
+                <apex:column value="{!sObjRec[fl]}">
+                    <apex:facet name="header">   
+                        <apex:commandLink action="{!ViewData}" value="{!fl}" id="cmdSort">
+                            <apex:param value="{!fl}" name="column" assignTo="{!sortExpression}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+            </apex:repeat>
+            <apex:facet name="footer">Showing Page # {!pageNumber} of {!totalPages}</apex:facet>   
+        </apex:pageBlockTable>
+        
+    </apex:pageBlock>
+    <apex:outputPanel id="paginationBtn">
+        <apex:commandButton action="{!Beginning}" title="Beginning" value="First" disabled="{!disablePrevious}" reRender="sobjectData,paginationBtn"/>
+        <apex:commandButton action="{!Previous}" title="Previous" value="Previous" disabled="{!disablePrevious}" reRender="sobjectData,paginationBtn"/>        
+        <apex:commandButton action="{!Next}" title="Next" value="Next" disabled="{!disableNext}" reRender="sobjectData,paginationBtn"/>
+        <apex:commandButton action="{!End}" title="End" value="Last" disabled="{!disableNext}" reRender="sobjectData,paginationBtn"/>
+    </apex:outputPanel>
+    
+</apex:component>
