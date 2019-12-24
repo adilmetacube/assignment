@@ -1,0 +1,143 @@
+trigger accountTestTrigger on Account (before insert, before update) {
+for(Account a: Trigger.new) {
+List<Contact> contacts = [select id, salutation, firstname, lastname, email
+from Contact where accountId = :a.Id];
+for(Contact c: contacts) {
+System.debug('Contact Id[' + c.Id + '], FirstName[' + c.firstname + '],
+LastName[' + c.lastname +']');
+c.Description=c.salutation + ' ' + c.firstName + ' ' + c.lastname;
+update c;
+}
+}
+}
+
+
+Optimized
+
+trigger accountTestTrigger on Account (before insert, before update){
+   List<Contact> contacts = [select id, salutation, firstname, lastname, email from Contact where AccountId in : Trigger.New];
+   for(contact c:contacts){
+       c.Description=c.salutation + ' ' + c.firstName + ' ' + c.lastname;
+       }
+    update contacts;
+}
+
+
+
+trigger accountTrigger on Account (before delete, before insert, before update) {
+List<Opportunity> opptysClosedLost = [select id, name, closedate, stagename from Opportunity
+where accountId IN :Trigger.newMap.keySet() and StageName='Closed - Lost'];
+List<Opportunity> opptysClosedWon = [select id, name, closedate, stagename from Opportunity where
+accountId IN :Trigger.newMap.keySet() and StageName='Closed - Won'];
+for(Account a : Trigger.new){
+for(Opportunity o: opptysClosedLost){
+if(o.accountid == a.id)
+System.debug('Do more logic here...');
+}
+for(Opportunity o: opptysClosedWon){
+if(o.accountid == a.id)
+System.debug('Do more logic here...');
+}
+}
+}
+
+optimized
+
+trigger accountTrigger on Account (before delete, before insert, before update) {
+ 
+     //This code efficiently queries all related Closed Lost and
+     //Closed Won opportunities in a single query.
+    List<Account> accountWithOpptys = [select id, name, (select id, name, closedate, 
+         stagename  from Opportunities  where accountId IN :Trigger.newMap.keySet() 
+         and  (StageName='Closed - Lost' or StageName = 'Closed - Won')) 
+         from Account where Id IN :Trigger.newMap.keySet()];
+    
+    //Loop through Accounts only once
+    for(Account a : accountWithOpptys){
+    	
+    	 //Loop through related Opportunities only once
+    	 for(Opportunity o: a.Opportunities){
+    	 	if(o.StageName == 'Closed - Won'){
+    	 		System.debug('Opportunity Closed Won...do some more logic here...');
+    	 	}else if(o.StageName =='Closed - Lost'){
+    	 		System.debug('Opportunity Closed Lost...do some more logic here...');
+    	 	}
+    	 }
+    
+   }
+}
+
+
+
+
+trigger accountLimitExample on Account (after delete, after insert, after update) {
+
+
+
+System.debug('Total Number of SOQL Queries allowed in this apex code context: ' + Limits.getLimitQueries());
+System.debug('Total Number of records that can be queried in this apex code context: ' + Limits.getLimitDmlRows());
+System.debug('Total Number of DML statements allowed in this apex code context: ' + Limits.getLimitDmlStatements() );
+System.debug('Total Number of CPU usage time (in ms) allowed in this Apex code context: ' + Limits.getLimitCpuTime());
+
+// Query the Opportunity object
+
+List<Opportunity> opptys =
+
+[select id, description, name, accountid, closedate, stagename from Opportunity where accountId IN:
+Trigger.newMap.keySet()];
+
+****** Question 3 Continued in next Slide *******
+
+Continued...
+
+
+System.debug('1.Number of Queries used in this apex code so far: ' + Limits.getQueries());
+System.debug('2.Number of rows queried in this apex code so far: ' + Limits.getDmlRows());
+System.debug('3.Number of Queries used in this apex code so far: : ' + Limits.getQueries() );
+System.debug('4. Amount of CPU time (in ms) used so far: ' + ?);
+
+//Proactively determine if there are too many Opportunities to update and avoid governor limits
+
+if(*** insert condition to determine too many opportunities to update ***) {
+
+// Logic to avoid governor limits - addError
+
+}
+
+
+
+else{
+
+System.debug('Continue processing. Not going to hit DML governor limits');
+
+System.debug('Going to update ' + opptys.size() + ' opportunities and governor limits will allow ' + ?);
+
+for(Account a : Trigger.new){
+
+System.debug('Number of DML statements used so far: ' + Limits.getQueries());
+
+***** Question 3 continued to next slide ******
+
+Continued...
+
+for(Opportunity o: opptys){
+
+if (o.accountid == a.id)
+
+o.description = 'testing';
+
+}
+
+}
+
+update opptys;
+
+System.debug('Final number of DML statements used so far: ' +  Limits.getQueries());
+
+System.debug('Final heap size: ' + Limits.getHeapSize());
+}
+}
+
+
+
+
