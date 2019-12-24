@@ -1,0 +1,12 @@
+<aura:component  controller="ContactController" >
+    <aura:attribute name="newContact" type="Contact"  default="{ 'sobjectType': 'Contact',
+                     'First Name': '','Last Name': '','Email':'','Phone':'','Fax':'',}"/>
+    <form class="slsd-form--stacked">
+        <lightning:input aura:id="contactField" type="text" value="{!v.newContact.FirstName}" Name="fname" label ="First Name"/>
+       <lightning:input aura:id="contactField" type="text" value="{!v.newContact.LastName}" Name="Last Name" label ="Last Name" required="true"/>
+       <lightning:input aura:id="contactField" type="email" name="email" label="Email"  value="{!v.newContact.Email}" />
+       <lightning:input aura:id="contactField" type="tel"  value="{!v.newContact.Phone}"  Name="Phone" label="Phone"/>
+       <lightning:input aura:id="contactField" type="tel"  value="{!v.newContact.Fax}"  Name="Fax" label="Fax"/>
+        <lightning:button label="Save Contact" onclick="{!c.clickCreateContact}"/>
+    </form>
+</aura:component>
