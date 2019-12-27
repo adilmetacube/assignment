@@ -40,7 +40,7 @@ public class ShoppingControllerEnterprise {
         if(wrapProductList==null){
             wrapProductList=new List<wrapProduct>();
             ProductsSelector prodSelector=  ProductsSelector.getInstance();
-        	List<Product__c> productList=prodSelector.getProducts(integer.ValueOf(numberOfRecords), counter_product,productName);
+            List<Product__c> productList=prodSelector.getProducts(integer.ValueOf(numberOfRecords), counter_product,productName);
             for(Product__c product:productList){
                 wrapProductList.add(new wrapProduct(product));
                 productAvailable.put(product,product.Quantity_Available__c.intValue());
@@ -68,13 +68,13 @@ public class ShoppingControllerEnterprise {
                 selectStatus=true;
                 selectedProduct.add(wrapProductObj.product);
                 Decimal quantity= (productAvailable.get(wrapProductObj.product)-wrapProductObj.product.Quantity_Available__c)==0?1:(productAvailable.get(wrapProductObj.product)-wrapProductObj.product.Quantity_Available__c);
-                PurchaseOrderLineItems__c orderLineItem=new  PurchaseOrderLineItems__c(name=wrapProductObj.product.name,
-                                                                                       Product_Code__c=wrapProductObj.product.ProductCode__c,
-                                                                                       Product__c=wrapProductObj.product.Id,
-                                                                                       Product_Price__c=wrapProductObj.product.Product_Price__c,
-                                                                                       Quantity__c=quantity);
+                    PurchaseOrderLineItems__c orderLineItem=new  PurchaseOrderLineItems__c(name=wrapProductObj.product.name,
+                                                                                           Product_Code__c=wrapProductObj.product.ProductCode__c,
+                                                                                           Product__c=wrapProductObj.product.Id,
+                                                                                           Product_Price__c=wrapProductObj.product.Product_Price__c,
+                                                                                           Quantity__c=quantity);
                 orderLineList.add(orderLineItem); 
-               // wrapProductObj.product.Quantity_Available__c= wrapProductObj.product.Quantity_Available__c-1;
+                // wrapProductObj.product.Quantity_Available__c= wrapProductObj.product.Quantity_Available__c-1;
                 showCartDataStatus=true;
             }
         }
@@ -88,21 +88,28 @@ public class ShoppingControllerEnterprise {
     }
     
     public void placeOrder(){
-        PurchaseOrder__c pOrder=new PurchaseOrder__c(name='New Order Test',Order_Status__c='Pending');
-        insert pOrder;
+        // Create a Unit Of Work
+        fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(
+            new Schema.SObjectType[] {
+                PurchaseOrder__c.SObjectType,
+                    PurchaseOrderLineItems__c.SObjectType
+                    }
+        );
+        PurchaseOrder__c pOrder=new PurchaseOrder__c(name='New Order',Order_Status__c='Pending');
+        uow.registerNew(pOrder);
         for(PurchaseOrderLineItems__c pOrderline:orderLineList){
-            pOrderline.PurchaseOrder__c=pOrder.Id;      
+            uow.registerNew(pOrderline, PurchaseOrderLineItems__c.PurchaseOrder__c, pOrder);
         }
+        uow.commitWork();
         showProductStatus=false;
         showCartDataStatus=false;
         showInvoiceDataStatus=false;
-        insert orderLineList;
     }
     
     
     public List<PurchaseOrder__c> getPurchaseOrder(){
-           	PurchaseOrdersSelector poSelector=  PurchaseOrdersSelector.getInstance();
-        	List<PurchaseOrder__c> poList=poSelector.getPurchaseOrders(integer.ValueOf(numberOfRecords), counter);
+        PurchaseOrdersSelector poSelector=  PurchaseOrdersSelector.getInstance();
+        List<PurchaseOrder__c> poList=poSelector.getPurchaseOrders(integer.ValueOf(numberOfRecords), counter);
         return poList;
     }
     public void deleteProduct(){
